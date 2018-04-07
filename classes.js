@@ -30,8 +30,17 @@
 */
 
 //Code Here
-
-
+class Employee {
+  constructor(first_name, last_name, email, age) {
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.age = age;
+  }
+  makeWidget() {
+    return `${this.first_name} ${this.last_name} Widget`;
+  }
+}
 
 ////////// PROBLEM 2 //////////
 
@@ -50,8 +59,27 @@
 */
 
 //Code Here
+class Manager {
+  constructor(first_name, last_name, email, age) {
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.age = age;
+    this.reports = [];
+  }
 
+  makeWidget() {
+    return `${this.first_name} ${this.last_name} Widget`;
+  }
 
+  hire(employee) {
+    this.reports.push(employee);
+  }
+
+  fire(index) {
+    this.reports.splice(index, 1);
+  }
+}
 
 ////////// PROBLEM 3 //////////
 
@@ -77,7 +105,41 @@
 
 //Code Here
 
+class ProgressiveManager extends Manager {
+  constructor(first_name, last_name, email, age) {
+    super(first_name, last_name, email, age);
+    this.title = "Not a manager";
+    this.bonus = 0;
+  }
 
+  hire(employee) {
+    super.hire(employee);
+    this.title = this.updateTitle();
+  }
+
+  updateTitle() {
+    const titleTable = {
+      "Barely Manager": [1, 3],
+      "Mostly Manager": [4, 10],
+      "Manager": [11, 50],
+      "Manager Plus": [51, 100],
+      "Bestest Manager": [101, Infinity]
+    };
+
+    for (let title in titleTable) {
+      let [min, max] = titleTable[title];
+      if (this.reports.length >= min && this.reports.length <= max) {
+        return title;
+      }
+    }
+  }
+
+  fire(index) {
+    super.fire(index);
+    this.title = this.updateTitle();
+    this.bonus += 100;
+  }
+}
 
 ////////// PROBLEM 4 - Black Diamond //////////
 
@@ -103,5 +165,26 @@
 */
 
 //Code Here
+class Machine {
+  constructor() {
+    this.widgets_made_count = 0;
+    this.wear_and_tear_count = 0;
+    this.needs_reboot = false;
+  }
 
+  makeWidgets(num) {
+    this.widgets_made_count += num;
+    this.wear_and_tear_count = this.widgets_made_count / 50;
+  }
+  fixMachine() {
+    this.needs_reboot = true;
+  }
+  reboot() {
+    let myMachine = this; // tying the keyword this to the function!
 
+    return function () {
+      myMachine.wear_and_tear_count -= 10;
+      myMachine.needs_reboot = true;
+    };
+  }
+}
